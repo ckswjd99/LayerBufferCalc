@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 
 import { 
@@ -19,6 +19,21 @@ import { styled } from '@mui/material/styles'
 
 import Layer from '../utils/Layer'
 
+const copyLayer = (layer) => {
+  const newLayer = new Layer()
+  newLayer.layerWidth = layer.layerWidth
+  newLayer.layerHeight = layer.layerHeight
+  newLayer.layerChannel = layer.layerChannel
+  newLayer.kernelType = layer.kernelType
+  newLayer.kernelWidth = layer.kernelWidth
+  newLayer.kernelHeight = layer.kernelHeight
+  newLayer.kernelChannel = layer.kernelChannel
+  newLayer.kernelPadding = layer.kernelPadding
+  newLayer.kernelStride = layer.kernelStride
+  
+  return newLayer
+}
+
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
@@ -33,7 +48,7 @@ const LayerProperty = styled(TextField)(({ theme }) => ({
 }))
 
 const ShowLayer = (props) => {
-  const {layer, index, layerModifiers} = props
+  const {layers, index, layerModifiers} = props
 
   return (
     <Item elevation={10}>
@@ -47,12 +62,13 @@ const ShowLayer = (props) => {
               id='layer-width' 
               label='Layer Width' 
               size='small' 
-              defaultValue={layer.layerWidth}
+              defaultValue={layers[index].layerWidth}
               onChange={(e) => {
                 e.target.value = parseInt(e.target.value.replace(/[^0-9]/g, ''))
-                layer.layerWidth = parseInt(e.target.value)
+                layers[index].layerWidth = parseInt(e.target.value)
+                layerModifiers.modifyLayer(layers[index], index)
               }}
-              value={layer.layerWidth}
+              value={layers[index].layerWidth}
               disabled={index !== 0}
               fullWidth
             />
@@ -62,10 +78,13 @@ const ShowLayer = (props) => {
               id='layer-height' 
               label='Layer Height' 
               size='small' 
-              defaultValue={layer.layerWidth} 
+              defaultValue={layers[index].layerWidth} 
               onChange={(e) => {
-                e.target.value = parseInt(e.target.value.replace(/[^0-9]/g, ''))
-                layer.layerHeight = parseInt(e.target.value)
+                const parsedNumber = parseInt(e.target.value.replace(/[^0-9]/g, ''))
+                const newLayer = copyLayer(layers[index])
+                newLayer.layerHeight = parseInt(parsedNumber)
+                layerModifiers.modifyLayer(newLayer, index)
+                e.target.value = parsedNumber
               }}
               disabled={index !== 0}
               fullWidth
@@ -76,10 +95,13 @@ const ShowLayer = (props) => {
               id='layer-channel' 
               label='Layer Channel' 
               size='small' 
-              defaultValue={layer.layerChannel} 
+              defaultValue={layers[index].layerChannel} 
               onChange={(e) => {
-                e.target.value = parseInt(e.target.value.replace(/[^0-9]/g, ''))
-                layer.layerChannel = parseInt(e.target.value)
+                const parsedNumber = parseInt(e.target.value.replace(/[^0-9]/g, ''))
+                const newLayer = copyLayer(layers[index])
+                newLayer.layerChannel = parseInt(parsedNumber)
+                layerModifiers.modifyLayer(newLayer, index)
+                e.target.value = parsedNumber
               }}
               disabled={index !== 0}
               fullWidth
@@ -96,9 +118,11 @@ const ShowLayer = (props) => {
               id='kernel-type'
               label='Kernel Type'
               size='small'
-              defaultValue={layer.kernelType}
+              defaultValue={layers[index].kernelType}
               onChange={(e) => {
-                layer.kernelType = e.target.value
+                const newLayer = copyLayer(layers[index])
+                newLayer.kernelType = parseInt(e.target.value)
+                layerModifiers.modifyLayer(newLayer, index)
               }}
               fullWidth
             >
@@ -111,10 +135,13 @@ const ShowLayer = (props) => {
               id='kernel-width' 
               label='Kernel Width' 
               size='small' 
-              defaultValue={layer.kernelWidth} 
+              defaultValue={layers[index].kernelWidth} 
               onChange={(e) => {
-                e.target.value = parseInt(e.target.value.replace(/[^0-9]/g, ''))
-                layer.kernelWidth = parseInt(e.target.value)
+                const parsedNumber = parseInt(e.target.value.replace(/[^0-9]/g, ''))
+                const newLayer = copyLayer(layers[index])
+                newLayer.kernelWidth = parseInt(parsedNumber)
+                layerModifiers.modifyLayer(newLayer, index)
+                e.target.value = parsedNumber
               }}
               fullWidth
             />
@@ -124,10 +151,13 @@ const ShowLayer = (props) => {
               id='kernel-height' 
               label='Kernel Height' 
               size='small' 
-              defaultValue={layer.kernelWidth} 
+              defaultValue={layers[index].kernelHeight} 
               onChange={(e) => {
-                e.target.value = parseInt(e.target.value.replace(/[^0-9]/g, ''))
-                layer.kernelHeight = parseInt(e.target.value)
+                const parsedNumber = parseInt(e.target.value.replace(/[^0-9]/g, ''))
+                const newLayer = copyLayer(layers[index])
+                newLayer.kernelHeight = parseInt(parsedNumber)
+                layerModifiers.modifyLayer(newLayer, index)
+                e.target.value = parsedNumber
               }}
               fullWidth
             />
@@ -137,10 +167,13 @@ const ShowLayer = (props) => {
               id='kernel-channel' 
               label='Kernel Channel' 
               size='small' 
-              defaultValue={layer.kernelChannel} 
+              defaultValue={layers[index].kernelChannel} 
               onChange={(e) => {
-                e.target.value = parseInt(e.target.value.replace(/[^0-9]/g, ''))
-                layer.kernelChannel = parseInt(e.target.value)
+                const parsedNumber = parseInt(e.target.value.replace(/[^0-9]/g, ''))
+                const newLayer = copyLayer(layers[index])
+                newLayer.kernelChannel = parseInt(parsedNumber)
+                layerModifiers.modifyLayer(newLayer, index)
+                e.target.value = parsedNumber
               }}
               fullWidth
             />
@@ -150,10 +183,13 @@ const ShowLayer = (props) => {
               id='kernel-padding' 
               label='Kernel Padding' 
               size='small' 
-              defaultValue={layer.kernelPadding} 
+              defaultValue={layers[index].kernelPadding} 
               onChange={(e) => {
-                e.target.value = parseInt(e.target.value.replace(/[^0-9]/g, ''))
-                layer.kernelPadding = parseInt(e.target.value)
+                const parsedNumber = parseInt(e.target.value.replace(/[^0-9]/g, ''))
+                const newLayer = copyLayer(layers[index])
+                newLayer.kernelPadding = parseInt(parsedNumber)
+                layerModifiers.modifyLayer(newLayer, index)
+                e.target.value = parsedNumber
               }}
               fullWidth
             />
@@ -163,10 +199,13 @@ const ShowLayer = (props) => {
               id='kernel-stride' 
               label='Kernel Stride' 
               size='small' 
-              defaultValue={layer.kernelStride} 
+              defaultValue={layers[index].kernelStride} 
               onChange={(e) => {
-                e.target.value = parseInt(e.target.value.replace(/[^0-9]/g, ''))
-                layer.kernelStride = parseInt(e.target.value)
+                const parsedNumber = parseInt(e.target.value.replace(/[^0-9]/g, ''))
+                const newLayer = copyLayer(layers[index])
+                newLayer.kernelStride = parseInt(parsedNumber)
+                layerModifiers.modifyLayer(newLayer, index)
+                e.target.value = parsedNumber
               }}
               fullWidth
             />
@@ -176,9 +215,9 @@ const ShowLayer = (props) => {
       </Stack>
 
       <Stack direction='row'>
-        <Button onClick={() => {layerModifiers.addLayer(new Layer(), index-1)}}>push left</Button>
+        <Button onClick={() => {layerModifiers.addLayer(new Layer(), index)}}>push left</Button>
         <Button onClick={() => {layerModifiers.deleteLayer(index)}}>delete</Button>
-        <Button onClick={() => {console.log({layer, index})}}>debug</Button>
+        <Button onClick={() => {console.log(layers[index])}}>debug</Button>
         <Button onClick={() => {layerModifiers.addLayer(new Layer(), index+1)}}>push right</Button>
       </Stack>
 
@@ -190,24 +229,32 @@ const ShowLayer = (props) => {
 
 const CalculatorPage = () => {
   const [layers, setLayers] = useState([new Layer()])
+  const [blanker, setBlanker] = useState(false)
 
   const deleteLayer = (index) => {
-    console.log(index)
-    console.log(layers.slice(0, index))
-    console.log(layers.slice(index+1))
-    console.log([...layers.slice(0, index), ...layers.slice(index+1)])
     const newLayer = [...layers.slice(0, index), ...layers.slice(index+1)]
     if (newLayer.length < 1) return
+    setBlanker(true)
     setLayers(newLayer)
   }
   const addLayer = (layer, index) => {
     const newLayer = [...layers.slice(0, index), layer, ...layers.slice(index)]
+    setBlanker(true)
+    setLayers(newLayer)
+  }
+  const modifyLayer = (layer, index) => {
+    const newLayer = [...layers.slice(0, index), layer, ...layers.slice(index+1)]
+    setBlanker(true)
     setLayers(newLayer)
   }
 
   const layerModifiers = {
-    deleteLayer, addLayer
+    deleteLayer, addLayer, modifyLayer
   }
+
+  useEffect(() => {
+    setBlanker(false)
+  }, [layers])
 
   return (
     <Box component='div'>
@@ -222,12 +269,13 @@ const CalculatorPage = () => {
       </Box>
       <Stack direction='row' spacing={2}>
         {
-          layers.map((layer, index) => (
-            <ShowLayer key={index} layer={layer} index={index} layerModifiers={layerModifiers}/>
+          blanker ? '' :
+          layers.map((_, index) => (
+            <ShowLayer key={index} layers={layers} index={index} layerModifiers={layerModifiers}/>
           ))
         }
       </Stack>
-      <Button onClick={()=>{console.log(layers)}}>debug</Button>
+      <Button onClick={() => {console.log(layers)}}>debug</Button>
     </Box>
   )
 }
