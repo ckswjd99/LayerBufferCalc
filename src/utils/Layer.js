@@ -11,6 +11,20 @@ class Layer {
 
   kernelPadding=1
   kernelStride=1
+
+  asJson () {
+    return {
+      layerWidth: this.layerWidth,
+      layerHeight: this.layerHeight,
+      layerChannel: this.layerChannel,
+      kernelType: this.kernelType,
+      kernelWidth: this.kernelWidth,
+      kernelHeight: this.kernelHeight,
+      kernelChannel: this.kernelChannel,
+      kernelPadding: this.kernelPadding,
+      kernelStride: this.kernelStride,
+    }
+  }
 }
 
 export default Layer

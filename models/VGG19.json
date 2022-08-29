@@ -1,0 +1,222 @@
+[
+  {
+    "layerWidth": 224,
+    "layerHeight": 224,
+    "layerChannel": 3,
+    "kernelType": "conv",
+    "kernelWidth": 3,
+    "kernelHeight": 3,
+    "kernelChannel": 64,
+    "kernelPadding": 1,
+    "kernelStride": 1
+  },
+  {
+    "layerWidth": 224,
+    "layerHeight": 224,
+    "layerChannel": 64,
+    "kernelType": "conv",
+    "kernelWidth": 3,
+    "kernelHeight": 3,
+    "kernelChannel": 64,
+    "kernelPadding": 1,
+    "kernelStride": 1
+  },
+  {
+    "layerWidth": 224,
+    "layerHeight": 224,
+    "layerChannel": 64,
+    "kernelType": "pool",
+    "kernelWidth": 2,
+    "kernelHeight": 2,
+    "kernelChannel": 64,
+    "kernelPadding": 0,
+    "kernelStride": 2
+  },
+  {
+    "layerWidth": 112,
+    "layerHeight": 112,
+    "layerChannel": 64,
+    "kernelType": "conv",
+    "kernelWidth": 3,
+    "kernelHeight": 3,
+    "kernelChannel": 128,
+    "kernelPadding": 1,
+    "kernelStride": 1
+  },
+  {
+    "layerWidth": 112,
+    "layerHeight": 112,
+    "layerChannel": 128,
+    "kernelType": "conv",
+    "kernelWidth": 3,
+    "kernelHeight": 3,
+    "kernelChannel": 128,
+    "kernelPadding": 1,
+    "kernelStride": 1
+  },
+  {
+    "layerWidth": 112,
+    "layerHeight": 112,
+    "layerChannel": 128,
+    "kernelType": "pool",
+    "kernelWidth": 2,
+    "kernelHeight": 2,
+    "kernelChannel": 128,
+    "kernelPadding": 0,
+    "kernelStride": 2
+  },
+  {
+    "layerWidth": 56,
+    "layerHeight": 56,
+    "layerChannel": 128,
+    "kernelType": "conv",
+    "kernelWidth": 3,
+    "kernelHeight": 3,
+    "kernelChannel": 256,
+    "kernelPadding": 1,
+    "kernelStride": 1
+  },
+  {
+    "layerWidth": 56,
+    "layerHeight": 56,
+    "layerChannel": 256,
+    "kernelType": "conv",
+    "kernelWidth": 3,
+    "kernelHeight": 3,
+    "kernelChannel": 256,
+    "kernelPadding": 1,
+    "kernelStride": 1
+  },
+  {
+    "layerWidth": 56,
+    "layerHeight": 56,
+    "layerChannel": 256,
+    "kernelType": "conv",
+    "kernelWidth": 3,
+    "kernelHeight": 3,
+    "kernelChannel": 256,
+    "kernelPadding": 1,
+    "kernelStride": 1
+  },
+  {
+    "layerWidth": 56,
+    "layerHeight": 56,
+    "layerChannel": 256,
+    "kernelType": "pool",
+    "kernelWidth": 2,
+    "kernelHeight": 2,
+    "kernelChannel": 256,
+    "kernelPadding": 0,
+    "kernelStride": 2
+  },
+  {
+    "layerWidth": 28,
+    "layerHeight": 28,
+    "layerChannel": 256,
+    "kernelType": "conv",
+    "kernelWidth": 3,
+    "kernelHeight": 3,
+    "kernelChannel": 512,
+    "kernelPadding": 1,
+    "kernelStride": 1
+  },
+  {
+    "layerWidth": 28,
+    "layerHeight": 28,
+    "layerChannel": 512,
+    "kernelType": "conv",
+    "kernelWidth": 3,
+    "kernelHeight": 3,
+    "kernelChannel": 512,
+    "kernelPadding": 1,
+    "kernelStride": 1
+  },
+  {
+    "layerWidth": 28,
+    "layerHeight": 28,
+    "layerChannel": 512,
+    "kernelType": "conv",
+    "kernelWidth": 3,
+    "kernelHeight": 3,
+    "kernelChannel": 512,
+    "kernelPadding": 1,
+    "kernelStride": 1
+  },
+  {
+    "layerWidth": 28,
+    "layerHeight": 28,
+    "layerChannel": 512,
+    "kernelType": "pool",
+    "kernelWidth": 2,
+    "kernelHeight": 2,
+    "kernelChannel": 512,
+    "kernelPadding": 0,
+    "kernelStride": 2
+  },
+  {
+    "layerWidth": 14,
+    "layerHeight": 14,
+    "layerChannel": 512,
+    "kernelType": "conv",
+    "kernelWidth": 3,
+    "kernelHeight": 3,
+    "kernelChannel": 512,
+    "kernelPadding": 1,
+    "kernelStride": 1
+  },
+  {
+    "layerWidth": 14,
+    "layerHeight": 14,
+    "layerChannel": 512,
+    "kernelType": "conv",
+    "kernelWidth": 3,
+    "kernelHeight": 3,
+    "kernelChannel": 512,
+    "kernelPadding": 1,
+    "kernelStride": 1
+  },
+  {
+    "layerWidth": 14,
+    "layerHeight": 14,
+    "layerChannel": 512,
+    "kernelType": "conv",
+    "kernelWidth": 3,
+    "kernelHeight": 3,
+    "kernelChannel": 512,
+    "kernelPadding": 1,
+    "kernelStride": 1
+  },
+  {
+    "layerWidth": 14,
+    "layerHeight": 14,
+    "layerChannel": 512,
+    "kernelType": "conv",
+    "kernelWidth": 3,
+    "kernelHeight": 3,
+    "kernelChannel": 512,
+    "kernelPadding": 1,
+    "kernelStride": 1
+  },
+  {
+    "layerWidth": 14,
+    "layerHeight": 14,
+    "layerChannel": 512,
+    "kernelType": "pool",
+    "kernelWidth": 2,
+    "kernelHeight": 2,
+    "kernelChannel": 512,
+    "kernelPadding": 0,
+    "kernelStride": 2
+  },
+  {
+    "layerWidth": 7,
+    "layerHeight": 7,
+    "layerChannel": 512,
+    "kernelType": "output",
+    "kernelWidth": 3,
+    "kernelHeight": 3,
+    "kernelChannel": 64,
+    "kernelPadding": 1,
+    "kernelStride": 1
+  }
+]
