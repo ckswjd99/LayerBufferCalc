@@ -98,6 +98,7 @@ const CalculatorPage = (props) => {
             Load
             <input hidden type="file" accept=".json" onChange={loadModel}/>
           </Button>
+          <Button color="inherit" onClick={() => window.open('https://github.com/ckswjd99/LayerBufferCalc/tree/main/models', '_blank')}>sample models</Button>
         </Toolbar>
       </AppBar>
 
