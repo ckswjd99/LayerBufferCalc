@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
+import { useState } from 'react'
+import { Layer, copyLayer, autoCompleteLayerList } from '../utils/Layer'
 
-import { 
+import {
   Box, 
   Button, 
   Stack,
@@ -17,54 +17,41 @@ import {
   Select,
   MenuItem
 } from '@mui/material'
+import LayerBox from './LayerBox'
+import CalcResultBox from './CalcResultBox'
 
-import Layer from '../utils/Layer'
-import { copyLayer, ShowLayer } from './ShowLayer'
-import DoCalc from './DoCalc'
 
-const CalculatorPage = () => {
-  const [layers, setLayers] = useState([new Layer()])
-  const [blanker, setBlanker] = useState(false)
+
+const CalculatorPage = (props) => {
+
+  // States
+  const [layerList, setLayerList] = useState([new Layer()])
   const [startLayer, setStartLayer] = useState(0)
   const [endLayer, setEndLayer] = useState(0)
   const [chunkHeight, setChunkHeight] = useState(0)
-  const [dataSize, setDataSize] = useState(0)
-  const [cacheL1Size, setCacheL1Size] = useState(0)
+  const [dataVolume, setDataVolume] = useState(0)
+  const [cacheVolume, setCacheVolume] = useState(0)
 
-  const autoCompletedLayer = (layerList) => {
-    const newLayerList = layerList.map(layer => copyLayer(layer))
-    for (let i=1; i<newLayerList.length; i++) {
-      newLayerList[i].layerWidth = (newLayerList[i-1].layerWidth + newLayerList[i-1].kernelPadding * 2 - newLayerList[i-1].kernelWidth) / newLayerList[i-1].kernelStride + 1
-      newLayerList[i].layerHeight = (newLayerList[i-1].layerHeight + newLayerList[i-1].kernelPadding * 2 - newLayerList[i-1].kernelHeight) / newLayerList[i-1].kernelStride + 1
-      newLayerList[i].layerChannel = newLayerList[i-1].kernelChannel
-      if(newLayerList[i].kernelType === 'pool') {
-        newLayerList[i].kernelChannel = newLayerList[i].layerChannel
-      }
-    }
-    return newLayerList
-  }
-
-  const deleteLayer = (index) => {
-    const newLayer = [...layers.slice(0, index), ...layers.slice(index+1)]
-    if (newLayer.length < 1) return
-    setBlanker(true)
-    setLayers(autoCompletedLayer(newLayer))
-  }
+  // Layer list and modifiers
   const addLayer = (layer, index) => {
-    const newLayer = [...layers.slice(0, index), layer, ...layers.slice(index)]
-    setBlanker(true)
-    setLayers(autoCompletedLayer(newLayer))
+    const newLayerList = [...layerList.slice(0, index), layer, ...layerList.slice(index).map(layer => copyLayer(layer, false))]
+    setLayerList(autoCompleteLayerList(newLayerList))
   }
-  const modifyLayer = (layer, index) => {
-    const newLayer = [...layers.slice(0, index), layer, ...layers.slice(index+1)]
-    setBlanker(true)
-    setLayers(autoCompletedLayer(newLayer))
+  const updateLayer = (layer, index) => {
+    const newLayerList = [...layerList.slice(0, index), layer, ...layerList.slice(index+1).map(layer => copyLayer(layer, false))]
+    setLayerList(autoCompleteLayerList(newLayerList))
+  }
+  const deleteLayer = (index) => {
+    if(layerList.length <= 1) return
+    const newLayerList = [...layerList.slice(0, index), ...layerList.slice(index+1).map(layer => copyLayer(layer, false))]
+    setLayerList(autoCompleteLayerList(newLayerList))
   }
 
   const layerModifiers = {
-    deleteLayer, addLayer, modifyLayer
+    addLayer, updateLayer, deleteLayer
   }
 
+  // Model I/O
   const loadModel = (e) => {
     console.log(e.target.files[0])
     console.log(e.target.value)
@@ -72,34 +59,31 @@ const CalculatorPage = () => {
     const reader = new FileReader()
     reader.addEventListener('load', e => {
       const fileContent = JSON.parse(e.target.result)
-      setBlanker(true)
-      setLayers(autoCompletedLayer(fileContent))
+      setLayerList(autoCompleteLayerList(fileContent))
     })
     reader.readAsText(e.target.files[0])
   }
 
   const saveModel = () => {
-    const layerList = layers.map(layer => layer.asJson())
+    const layers = layerList.map(layer => layer.asJson())
     const fileName = "model";
-    const json = JSON.stringify(layerList, null, 2);
+    const json = JSON.stringify(layers, null, 2);
     const blob = new Blob([json], { type: "application/json" });
     const href = URL.createObjectURL(blob);
 
-    // create "a" HTLM element with href to file
     const link = document.createElement("a");
     link.href = href;
     link.download = fileName + ".json";
     document.body.appendChild(link);
     link.click();
 
-    // clean up "a" element & remove ObjectURL
     document.body.removeChild(link);
     URL.revokeObjectURL(href);
   }
 
-  useEffect(() => {
-    setBlanker(false)
-  }, [layers])
+  // Calculation parameters
+  
+
 
   return (
     <Box component='div'>
@@ -108,7 +92,7 @@ const CalculatorPage = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Layer Buffering Calculator
           </Typography>
-          <Button color="inherit" onClick={() => {console.log(layers)}}>debug</Button>
+          <Button color="inherit" onClick={console.log(layerList)}>debug</Button>
           <Button color="inherit" onClick={saveModel}>Save</Button>
           <Button color="inherit" component="label">
             Load
@@ -122,14 +106,14 @@ const CalculatorPage = () => {
       </Box>
 
       <Box>
-        <Stack direction='row' spacing={2} sx={{overflowX: 'auto', padding: 2}}>
-          {
-            blanker ? '' :
-            layers.map((_, index) => (
-              <ShowLayer key={index} layers={layers} index={index} layerModifiers={layerModifiers}/>
-            ))
-          }
-        </Stack>
+        <Stack direction='row' spacing={2} sx={{overflowX: 'auto', padding: 2}}>{
+          layerList.map((layer, index) => (<LayerBox 
+            key={layer.ID}
+            layerList={layerList}
+            index={index}
+            layerModifiers={layerModifiers}
+          />))
+        }</Stack>
       </Box>
 
       <Box>
@@ -138,18 +122,19 @@ const CalculatorPage = () => {
 
       <Box sx={{display: 'flex', justifyContent: 'center', mb:'32px'}}>
         <Grid container width='960px' spacing={4}>
+
           <Grid item xs={6} sx={{display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
             <Typography mb='4'>Start Layer</Typography>
-            <Select size='small' onChange={(e) => {setStartLayer(e.target.value)}}>
-              {(new Array(layers.length)).fill(0).map((_, i) => (
+            <Select size='small' onChange={(e) => {setStartLayer(parseInt(e.target.value))}}>
+              {(new Array(layerList.length)).fill(0).map((_, i) => (
                 <MenuItem value={i}>L{i}</MenuItem>
               ))}
             </Select>
           </Grid>
           <Grid item xs={6} sx={{display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
             <Typography>End Layer</Typography>
-            <Select size='small' onChange={(e) => {setEndLayer(e.target.value)}}>
-              {(new Array(layers.length)).fill(0).map((_, i) => (
+            <Select size='small' onChange={(e) => {setEndLayer(parseInt(e.target.value))}}>
+              {(new Array(layerList.length)).fill(0).map((_, i) => (
                 <MenuItem value={i}>L{i}</MenuItem>
               ))}
             </Select>
@@ -159,27 +144,30 @@ const CalculatorPage = () => {
             <TextField size='small' onChange={(e) => {setChunkHeight(parseInt(e.target.value.replace(/[^0-9]/g, '')))}} />
           </Grid>
           <Grid item xs={3} sx={{display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
-            <Typography>Data Size (Byte)</Typography>
-            <TextField size='small' onChange={(e) => {setDataSize(parseInt(e.target.value.replace(/[^0-9]/g, '')))}} />
+            <Typography>Data Volume (Byte)</Typography>
+            <TextField size='small' onChange={(e) => {setDataVolume(parseInt(e.target.value.replace(/[^0-9]/g, '')))}} />
           </Grid>
           <Grid item xs={3} sx={{display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
-            <Typography>L1 Cache Size (Byte)</Typography>
-            <TextField size='small' onChange={(e) => {setCacheL1Size(parseInt(e.target.value.replace(/[^0-9]/g, '')))}} />
+            <Typography>Cache Volume (Byte)</Typography>
+            <TextField size='small' onChange={(e) => {setCacheVolume(parseInt(e.target.value.replace(/[^0-9]/g, '')))}} />
           </Grid>
           
         </Grid>
       </Box>
 
-      <DoCalc 
-        layers={layers}
+      <CalcResultBox
+        layers={layerList}
         startLayer={startLayer}
         endLayer={endLayer}
         chunkHeight={chunkHeight}
-        dataSize={dataSize}
-        cacheL1Size={cacheL1Size}
+        dataVolume={dataVolume}
+        cacheVolume={cacheVolume}
       />
 
-      <Box sx={{paddingTop: 24}}/>
+      <Box height={'240px'} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
+        <Typography color="text.secondary" fontSize={'16px'}>Copyright ⓒ 2022. ckswjd99 All Rights Reserved.</Typography>
+        <a href="https://5iq.cc">https://5iq.cc</a>
+      </Box>
 
     </Box>
   )
